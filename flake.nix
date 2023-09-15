@@ -3,46 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs";
+    niveum.url = "github:kmein/niveum";
   };
 
   outputs = {
     self,
     nixpkgs,
+    niveum,
   }: let
-    stardict-tools = pkgs.stdenv.mkDerivation {
-      name = "stardict-tools";
-      nativeBuildInputs = [
-        pkgs.autoreconfHook
-        pkgs.pkg-config
-        pkgs.which
-        pkgs.libtool
-      ];
-      buildInputs = [ pkgs.glib pkgs.zlib pkgs.gtk3 pkgs.libmysqlclient pkgs.pcre pkgs.libxml2];
-      buildPhase = "make";
-      configureFlags = ["--disable-dict"];
-      env.NIX_CFLAGS_COMPILE = toString [
-        "-Wno-error=format-security"
-      ];
-      patchPhase = ''
-        ${pkgs.gnused}/bin/sed -i s/noinst_PROGRAMS/bin_PROGRAMS/ tools/src/Makefile.am
-      '';
-      installFlags = [ "INSTALL_PREFIX=$(out)" ];
-      autoreconfPhase = ''
-        patchShebangs ./autogen.sh
-        ./autogen.sh
-      '';
-      installPhase = ''
-        mkdir $out
-        make install
-      '';
-      src = pkgs.fetchFromGitHub {
-        owner = "huzheng001";
-        repo = "stardict-3";
-        rev = "96b96d89eab5f0ad9246c2569a807d6d7982aa84";
-        hash = "sha256-zmqp2maKv2JZ5fwMVE7gIOg0BKdEKZ4UvTLC0suuBRw=";
-      };
-    };
-
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
     lib = nixpkgs.lib;
@@ -86,6 +54,8 @@
     babylon = languageName: pkgs.runCommand languageName {} ''
       ${pkgs.jq}/bin/jq --slurp --raw-output --from-file ${./generate-babylon.jq} ${dumps.${languageName}} > $out
     '';
+
+    stardict-tools = niveum.packages.${system}.stardict-tools;
 
     stardict = languageName: pkgs.runCommand languageName {} ''
       mkdir $out
