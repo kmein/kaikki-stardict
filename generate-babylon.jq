@@ -16,6 +16,7 @@ map(
     | unique
   ) as $forms
   | (.pos // "") as $pos
+  | (.descendants // [] | map(.text | gsub("\n"; " › ")) | join("<br>")) as $descendants
   | (.etymology_text // "" | gsub("\n"; "<br>")) as $etymology
   | (
     .senses
@@ -26,5 +27,5 @@ map(
     | join("; ")
     | gsub("\n"; "<br>")
   ) as $meanings
-  | "\($forms | join("|"))\n\($pos) — \($etymology)<br><br>\($meanings)\n"
+  | "\($forms | join("|"))\n\($pos) — \($etymology)<br><br>\($meanings)<br><br>\($descendants)\n"
 ) | join("\n")
