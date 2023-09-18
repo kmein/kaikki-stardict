@@ -1,1 +1,8 @@
 result
+*.idx
+*.dict.dz
+*.syn
+*.ifo
+*.zip
+*.json
+*.babylon
