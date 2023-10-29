@@ -27,5 +27,5 @@ map(
     | join("; ")
     | gsub("\n"; "<br>")
   ) as $meanings
-  | "\($forms | join("|"))\n\($pos) — \($etymology)<br><br>\($meanings)<br><br>\($descendants)\n"
+  | "\($forms | join("|"))\n\(.head_templates // []|map(.expansion)|join(",")|gsub("\n"; "<br>")) — \($pos) — \($etymology)<br><br>\($meanings)<br><br>\($descendants)\n"
 ) | join("\n")
