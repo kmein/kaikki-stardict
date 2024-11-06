@@ -1,5 +1,5 @@
 .PHONY: all
-all: Urdu.zip Old_Church_Slavonic.zip Egyptian.zip Old_Norse.zip Old_High_German.zip Gothic.zip Old_English.zip  Tocharian_A.zip Tocharian_B.zip Proto-Indo-European.zip Proto-Germanic.zip Proto-West_Germanic.zip Proto-Slavic.zip Proto-Celtic.zip Proto-Brythonic.zip Proto-Italic.zip Hebrew.zip Arabic.zip Persian.zip Danish.zip
+all: Urdu.zip Old_Church_Slavonic.zip Egyptian.zip Old_Norse.zip Old_High_German.zip Gothic.zip Old_English.zip  Tocharian_A.zip Tocharian_B.zip Proto-Indo-European.zip Proto-Germanic.zip Proto-West_Germanic.zip Proto-Slavic.zip Proto-Celtic.zip Proto-Brythonic.zip Proto-Italic.zip Hebrew.zip Arabic.zip Persian.zip Danish.zip Turkish.zip
 
 %.babylon: %.jsonl
 	jq --slurp --raw-output --from-file generate-babylon.jq "$<" > "$@"
