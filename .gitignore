@@ -3,3 +3,4 @@ result
 *.tsv
 *.stardict/
 *.zip
+site/

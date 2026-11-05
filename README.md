@@ -1,5 +1,6 @@
 # Offline Wiktionaries
 Dictionaries for [StarDict](https://en.wikipedia.org/wiki/StarDict)-compatible applications, based on Wiktionary data.
+Download them from <https://kmein.github.io/kaikki-stardict/>; they are rebuilt monthly.
 
 The data has been scraped from Wiktionary by the data-mining group *kaikki*, based on the following approach:
 
