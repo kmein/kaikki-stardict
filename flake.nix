@@ -2,23 +2,20 @@
   description = "Wiktionary-based dictionary files";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
-    niveum.url = "github:kmein/niveum";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
   };
 
-  outputs = {self, nixpkgs, niveum}: let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs {
-      inherit system;
-    };
-  in {
-    devShells.${system}.default = pkgs.mkShell {
-      packages = [
-        niveum.packages.${system}.stardict-tools
-        pkgs.dict # dictzip
-        pkgs.jq
-      ];
-    };
+  outputs = inputs: {
+    devShells = builtins.mapAttrs (system: pkgs: {
+      default = pkgs.mkShell {
+        packages = [
+          pkgs.curl
+          pkgs.dict # dictzip, which pyglossary shells out to
+          pkgs.jq
+          pkgs.pyglossary
+          pkgs.zip
+        ];
+      };
+    }) inputs.nixpkgs.legacyPackages;
   };
 }
-

@@ -1,8 +1,5 @@
 result
-*.idx
-*.dict.dz
-*.syn
-*.ifo
+*.jsonl
+*.tsv
+*.stardict/
 *.zip
-*.json
-*.babylon
