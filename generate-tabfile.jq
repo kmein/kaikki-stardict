@@ -5,8 +5,11 @@
 def distinct: reduce .[] as $x ([]; if index([$x]) then . else . + [$x] end);
 def esc: gsub("&"; "&amp;") | gsub("<"; "&lt;") | gsub(">"; "&gt;") | gsub("\t"; " ");
 def term: gsub("[\t\n]"; " ") | gsub("\\\\"; "\\\\") | gsub("\\|"; "\\|");
-# romanizations (hebrew's, mostly) mark stress with an acute that nobody types
-def unstressed: gsub("á"; "a") | gsub("é"; "e") | gsub("í"; "i") | gsub("ó"; "o") | gsub("ú"; "u");
+# romanizations (persian's and hebrew's, mostly) mark stress with an acute that nobody types,
+# also on top of another diacritic: precomposed (ấ) or combining (ā́)
+def unstressed:
+  gsub("\u0301"; "")
+  | gsub("(?<v>[áéíóúÁÉÍÓÚấếḗốṓ])"; {"á": "a", "é": "e", "í": "i", "ó": "o", "ú": "u", "Á": "A", "É": "E", "Í": "I", "Ó": "O", "Ú": "U", "ấ": "â", "ế": "ê", "ḗ": "ē", "ố": "ô", "ṓ": "ō"}[.v]);
 # no-break spaces survive html renderers that collapse ordinary ones
 def indent($depth): [range($depth) | "\u00a0\u00a0"] | join("");
 
