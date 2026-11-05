@@ -5,6 +5,8 @@
 def distinct: reduce .[] as $x ([]; if index([$x]) then . else . + [$x] end);
 def esc: gsub("&"; "&amp;") | gsub("<"; "&lt;") | gsub(">"; "&gt;") | gsub("\t"; " ");
 def term: gsub("[\t\n]"; " ") | gsub("\\\\"; "\\\\") | gsub("\\|"; "\\|");
+# romanizations (hebrew's, mostly) mark stress with an acute that nobody types
+def unstressed: gsub("á"; "a") | gsub("é"; "e") | gsub("í"; "i") | gsub("ó"; "o") | gsub("ú"; "u");
 # no-break spaces survive html renderers that collapse ordinary ones
 def indent($depth): [range($depth) | "\u00a0\u00a0"] | join("");
 
@@ -46,8 +48,8 @@ def entry:
         | .[]
         # drop wiktextract's table metadata and the "-" placeholders of empty table cells
         | select(.tags // [] | any(. == "table-tags" or . == "inflection-template" or . == "class") | not)
-        | .form, .roman
-        | strings
+        | (.form | strings),
+          ((.roman | strings), (select(.tags // [] | any(. == "romanization")) | .form | strings) | ., unstressed)
         | select(test("\\p{L}"))
       )
     ] as $alternatives
