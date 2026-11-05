@@ -20,14 +20,19 @@ jobs:
       - uses: cachix/install-nix-action@v31
       - name: Build dictionaries
         run: nix develop --command make --jobs=4 site
-      - name: Publish release
+      - name: Publish releases
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          today=$(date -u +%F)
           if gh release view latest > /dev/null 2>&1; then
             gh release delete latest --cleanup-tag --yes
           fi
-          gh release create latest --prerelease --target "$GITHUB_SHA" --title "Dictionary release" --notes "Built from kaikki.org data on $(date -u +%F)." ./*.zip
+          gh release create latest --prerelease --target "$GITHUB_SHA" --title "Dictionary release" --notes "Built from kaikki.org data on $today." ./*.zip
+          # dated releases stay untouched so their urls can be pinned by hash; a later run on the same day keeps the first
+          if ! gh release view "$today" > /dev/null 2>&1; then
+            gh release create "$today" --latest=false --target "$GITHUB_SHA" --title "Dictionaries of $today" --notes "Built from kaikki.org data on $today." ./*.zip
+          fi
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site
