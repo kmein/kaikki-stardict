@@ -1,4 +1,4 @@
-LANGUAGES = Hindi Urdu Old_Church_Slavonic Egyptian Old_Norse Old_High_German Gothic Old_English Tocharian_A Tocharian_B Proto-Indo-European Proto-Germanic Proto-West_Germanic Proto-Slavic Proto-Celtic Proto-Brythonic Proto-Italic Hebrew Arabic Persian Danish Turkish
+LANGUAGES = Hindi Urdu Old_Church_Slavonic Egyptian Old_Norse Old_High_German Gothic Old_English Tocharian_A Tocharian_B Proto-Indo-European Proto-Germanic Proto-West_Germanic Proto-Slavic Proto-Celtic Proto-Brythonic Proto-Italic Hebrew Arabic Persian Danish Turkish Yiddish Tamil
 
 .PHONY: all
 all: $(addsuffix .zip,$(LANGUAGES))
