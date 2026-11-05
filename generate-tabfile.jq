@@ -51,7 +51,8 @@ def entry:
         | .[]
         # drop wiktextract's table metadata and the "-" placeholders of empty table cells
         | select(.tags // [] | any(. == "table-tags" or . == "inflection-template" or . == "class") | not)
-        | (.form | strings),
+        # russian forms carry a combining stress acute (воды́); precomposed letters (old norse á) stay
+        | (.form | strings | ., gsub("\u0301"; "")),
           ((.roman | strings), (select(.tags // [] | any(. == "romanization")) | .form | strings) | ., unstressed)
         | select(test("\\p{L}"))
       )
