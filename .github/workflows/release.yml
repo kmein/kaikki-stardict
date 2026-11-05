@@ -1,23 +1,25 @@
-name: "pre-release"
+name: release
 on:
   push:
-    branches:
-      - "master"
+    branches: [master]
+  schedule:
+    - cron: "0 3 1 * *"
+  workflow_dispatch:
+permissions:
+  contents: write
 jobs:
-  pre-release:
-    name: "Pre Release"
-    runs-on: "ubuntu-latest"
+  release:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install Nix
-        uses: cachix/install-nix-action@v16
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
       - name: Build dictionaries
-        run: nix develop --command make
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Dictionary release"
-          files: |
-            *.zip
+        run: nix develop --command make --jobs=4
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view latest > /dev/null 2>&1; then
+            gh release delete latest --cleanup-tag --yes
+          fi
+          gh release create latest --prerelease --target "$GITHUB_SHA" --title "Dictionary release" --notes "Built from kaikki.org data on $(date -u +%F)." ./*.zip
